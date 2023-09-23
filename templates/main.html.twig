@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Errors</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <img src="/ecotone_logo_no_background.png" class="img-fluid img-thumbnail w-50 p-3" alt="Ecotone logo">
+            <div class="row align-items-md-stretch">
+                {% for service in services %}
+                    <tr>
+                        <td><b>{{ service.name }}</b></td>
+                        <td>{{ service.errorsCount }}</td>
+                        <td><a href="/service/{{ service.name }}">Get more details</a></td>
+                    </tr>
+                {% endfor %}
+            </div>
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

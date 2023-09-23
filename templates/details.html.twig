@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="mt-4">{{ serviceName }} - Errors</h1>
+    <form action="/service/{{ serviceName }}/replayAll" method="post"><button class="btn btn-warning" type="submit">Replay all messages</button></form>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Message Id</th>
+                <th>Error Message</th>
+                <th>Stacktrace</th>
+                <th>Occurred At</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for error in errors %}
+                <tr>
+                    <td>{{ error.messageId }}</td>
+                    <td>{{ error.message }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stackTrace">Show</button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="stackTrace" tabindex="-1" aria-labelledby="stackTraceLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        {{ error.stackTrace }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ error.failedTimestamp |date("d-m-Y H:i:s.u") }}</td>
+                    <td>
+                        <form action="/service/{{ serviceName }}/replay/{{ error.messageId }}" method="post"><button class="btn btn-success" type="submit">Replay</button></form>
+                        <form action="/service/{{ serviceName }}/delete/{{ error.messageId }}" method="post"><button class="btn btn-danger" type="submit">Delete</button></form>
+                    </td>
+                </tr>
+            {% endfor %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% for page in 1..pagesCount %}
+                        <li class="page-item"><a class="page-link" href="/service/{{ serviceName }}?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
